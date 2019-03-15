@@ -7,5 +7,5 @@ Sponsors: Cara Steib
 
 We will be creating a program that monitors IoT traffic on a network
 We will need to look into BroIDS and OpenWRT
-BroIDS will aid in monitoring network traffic
+Zeek (formerly known as Bro IDS) will aid in monitoring network traffic
 OpenWRT will allow us to modify the access point
