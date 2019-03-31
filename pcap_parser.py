@@ -139,7 +139,7 @@ def method_filter_HTTP(pkt):
 # scapy function that allows us to perform a function on each packet in our pcap
 # prn is the function to pass each packet to
 # timeout is the amount of time to process packets (using this because the pcap is so large) 
-sniff(offline="16-09-23.pcap",prn=method_filter_HTTP,store=0, timeout=3)
+sniff(offline="16-09-25.pcap",prn=method_filter_HTTP,store=0, timeout=3)
 # Reset Index
 df = df.reset_index()
 
@@ -153,8 +153,10 @@ print(df.to_string(), file=output)
 output_arp = open("output_arp.txt", "w+")
 print(df_ARP.to_string(), file=output_arp)
 
+IP_to_MAC_Table = open('Ip2MAC_Table.txt','w')
+
 print()
-print('MAC               - IP            - Is the MAC known?  -  MAC Lookup Company Name')
+#print('MAC               - IP            - Is the MAC known?  -  MAC Lookup Company Name')
 unique_arp = df_ARP['hwsrc'].unique()
 for hwsrc in unique_arp:
     psrc = ((df_ARP[df_ARP.hwsrc == hwsrc])['psrc'])[:1]
@@ -169,7 +171,7 @@ for hwsrc in unique_arp:
     r = requests.get(MAC_URL % hwsrc)
     r = r.json()
 
-    print(hwsrc + ' - ' + psrc + ' - ' + value + ' -  Company: ' + r['result']['company'] )
+    print(psrc + '-' + hwsrc, file=IP_to_MAC_Table)#+ ' - '+ value + ' -  Company: ' + r['result']['company'], file=IP_to_MAC_Table)
 
 # print simple metrics
 print()
