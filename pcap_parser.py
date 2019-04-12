@@ -9,6 +9,7 @@ import pprint
 import requests #for MacLookup
 import json
 import codecs
+import sys
 
 sns.set(color_codes=True)
 
@@ -136,10 +137,16 @@ def method_filter_HTTP(pkt):
         print(progress)
     progress = progress + 1
 
+if(len(sys.argv) < 2):
+    print("Please pass in pcap file path when executing")
+    exit()
+
+pcapFileName = sys.argv[1]
+
 # scapy function that allows us to perform a function on each packet in our pcap
 # prn is the function to pass each packet to
 # timeout is the amount of time to process packets (using this because the pcap is so large) 
-sniff(offline="16-09-25.pcap",prn=method_filter_HTTP,store=0, timeout=3)
+sniff(offline=pcapFileName,prn=method_filter_HTTP,store=0, timeout=3)
 # Reset Index
 df = df.reset_index()
 
@@ -147,13 +154,13 @@ df = df.reset_index()
 df = df.drop(columns="index")
 
 # print the dataframe to a file (will be a table)
-output = open("output.txt", "w+")
+output = open("Outputs/output.txt", "w+")
 print(df.to_string(), file=output)
 
-output_arp = open("output_arp.txt", "w+")
+output_arp = open("Outputs/output_arp.txt", "w+")
 print(df_ARP.to_string(), file=output_arp)
 
-IP_to_MAC_Table = open('Ip2MAC_Table.txt','w')
+IP_to_MAC_Table = open('Outputs/Ip2MAC_Table.txt','w')
 
 print()
 #print('MAC               - IP            - Is the MAC known?  -  MAC Lookup Company Name')
@@ -186,4 +193,4 @@ print(df['dst'].unique())
 source_addresses = df.groupby("src")['payload'].sum()
 chart = source_addresses.plot(kind='barh',title="Addresses Sending Payloads",figsize=(8,5))
 fig = chart.get_figure()
-fig.savefig("myplot.pdf", bbox_inches="tight")
+fig.savefig("Outputs/myplot.pdf", bbox_inches="tight")

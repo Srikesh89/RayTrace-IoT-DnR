@@ -1,7 +1,14 @@
 import arff
 import json
+import sys
 
-data = arff.load(open('netmate.arff', 'r')) #open the original arff file we want to add our classification of IoT or nonIoT to
+if(len(sys.argv) < 2):
+    print("Please pass in pcap file path when executing")
+    exit()
+
+arffFileName = sys.argv[1]
+
+data = arff.load(open(arffFileName, 'r')) #open the original arff file we want to add our classification of IoT or nonIoT to
 
 iP2MAC_Table = open('Ip2MAC_Table.txt', 'r') #open the file that holds a table of IPs and their Associated MAC addresses for the pcap we used
 
@@ -20,7 +27,7 @@ while line:
 # Adding the class attribute to the arff file. 
 # The class attribute will be a 'yes' or 'no' value and will denote whether that flow is an IoT device or not.
 #
-class_attribute_list = ['class', '{yes, no}'] #[<name of attribute>, <type>] | find a way to get this automated to be this nominal thing
+class_attribute_list = ['class', 'STRING'] #'{yes, no}'] #[<name of attribute>, <type>] | find a way to get this automated to be this nominal thing
 data['attributes'].append(class_attribute_list) #append the attribute to the object we extracted from the file
 
 
@@ -33,10 +40,7 @@ for key in data['data']:
     #if we do not have the IP address in the dictionary we assume it is not an IoT device so we append no
     except:
         key.append('no')
-
-#for testing print the JSON version to a file
-output = open('output_arff.txt', 'w')
-print(json.dumps(data, indent=1), file=output)
+    # key.append('?')
 
 #save our new arff file
-print(arff.dumps(data), file=open('output_arff.arff','w'))
+print(arff.dumps(data), file=open('Arff_Editor_Outputs/output_arff.arff','w'))
