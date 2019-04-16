@@ -32,4 +32,6 @@ Steps to Running the Machine Learning IoT traffic discovery program:
 
 
 Running the Test Case Included:
-	
+	 python ready_arff.py Pcaps/test_case /home/eric/netmate-flowcalc-master/
+
+	 python wrappedWeka.py Arff_Editor_Outputs/output_arff.arff
