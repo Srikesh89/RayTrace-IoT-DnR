@@ -22,14 +22,12 @@ while line:
 
     line = iP2MAC_Table.readline() #read the next line in the file
 
-
 # 
 # Adding the class attribute to the arff file. 
 # The class attribute will be a 'yes' or 'no' value and will denote whether that flow is an IoT device or not.
 #
-class_attribute_list = ['class', 'STRING'] #'{yes, no}'] #[<name of attribute>, <type>] | find a way to get this automated to be this nominal thing
+class_attribute_list = ['class', 'NUMERIC'] #'{yes, no}'] #[<name of attribute>, <type>] | find a way to get this automated to be this nominal thing
 data['attributes'].append(class_attribute_list) #append the attribute to the object we extracted from the file
-
 
 #iterate through each row in the arff file's data section
 for key in data['data']:
@@ -44,3 +42,11 @@ for key in data['data']:
 
 #save our new arff file
 print(arff.dumps(data), file=open('Arff_Editor_Outputs/output_arff.arff','w'))
+
+# arffFile = open('Arff_Editor_Outputs/output_arff.arff','w+')
+
+with open("Arff_Editor_Outputs/output_arff.arff") as f:
+    newText=f.read().replace('@ATTRIBUTE class NUMERIC', '@ATTRIBUTE class {yes, no}')
+
+with open("Arff_Editor_Outputs/output_arff.arff", "w") as f:
+    f.write(newText)

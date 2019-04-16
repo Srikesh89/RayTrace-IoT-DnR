@@ -1,0 +1,35 @@
+Steps to Running the Machine Learning IoT traffic discovery program:
+	
+	Prerequisite Installations:
+		Program Tested on Ubuntu Linux so preferably use this(Netmate needs linux to run)
+
+		Install Anaconda
+			export environment: 'conda env export | grep -v "^prefix: " > environment.yml'
+			import environment: 'conda env create -f environment.yml'
+		
+		Install python3-tkinter(for pcap_parser.py): 'sudo apt-get install python3-tk'
+
+		Install NetMate (https://github.com/DanielArndt/netmate-flowcalc)
+			Information about NetMate usage (https://dan.arndt.ca/nims/calculating-flow-statistics-using-netmate/)
+
+		Download and extract weka to the directory of this project (might work putting it anywhere but I have it installed to the project directory)
+		Follow install instructions for python-weka-wrapper3 (http://fracpete.github.io/python-weka-wrapper3/install.html)
+			Make sure to follow the "Prerequisites for all plaforms" as well as the Ubuntu section
+			I used the following link to set the JAVA_HOME environment variable (https://askubuntu.com/questions/175514/how-to-set-java-home-for-java)
+			NOTE: Use ' export JAVA_HOME="/usr/lib/jvm/default-java/" ' for installing python-weka-wrapper3
+		
+		If using goPcapParser then you will need to install GoLang
+
+1. Run setup script that will create the folders for outputs
+	- "python folderSetup.py"
+2. Save your pcap files to the Pcaps folder 
+3. Run the 'readyArff.py' to begin the pipeline of your pcap being converted to labeled network flows in an Arff format for use with weka
+	- example usage: 'python ready_arff.py Pcaps/16-09-25.pcap /home/eric/netmate-flowcalc-master/'
+		- note: the two command-line arguments are the path to the pcap to be used and the path to your NetMate installation in that order 
+4. Now that the Arff file is ready we can use the wrappedWeka.py program to perform a RandomForest machine learning algorithm on the input Arff file and output the results
+	- example usage: 'python wrappedWeka.py Arff_Editor_Outputs/output_arff.arff'
+		- note: the command-line argument is the path to the arff file to be examined 
+
+
+Running the Test Case Included:
+	

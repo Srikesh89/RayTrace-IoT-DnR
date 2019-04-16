@@ -2,6 +2,7 @@ import os
 import traceback
 
 import weka.core.jvm as jvm
+import sys
 
 from weka.core.converters import Loader
 
@@ -10,15 +11,30 @@ from weka.core.dataset import Instances
 from weka.classifiers import Classifier, Evaluation
 from weka.filters import Filter
 
+from weka.core.dataset import Attribute
+
 jvm.start()
 
 print()
-data_dir = "/home/eric/Raytrace/Arff_Editor_Outputs/"
+data_dir = "Arff_Editor_Outputs/"
 loader = Loader(classname="weka.core.converters.ArffLoader")
-data = loader.load_file('/home/eric/Raytrace/Arff_Editor_Outputs/output_arff_2wkss.arff')#data_dir + "output_arff.arff")
+
+if(len(sys.argv) < 2):
+    print("Please pass in arff file path when executing")
+    exit()
+
+arffFileName = sys.argv[1]
+
+data = loader.load_file(arffFileName)
 data.class_is_last()
 data.delete_attribute(0) #delete source IP attribute
 data.delete_attribute(1) #delete destination IP attribute
+
+#nominalAttr = Attribute.create_nominal("class", "{yes, no}")
+#data.delete_last_attribute()
+#data.insert_attribute(nominalAttr, 0)
+#data.class_is_first()
+
 #print(data)
 
 classifier = Classifier(classname="weka.classifiers.trees.RandomForest")
@@ -32,9 +48,14 @@ rand_data.randomize(rnd)
 if rand_data.class_attribute.is_nominal:
     rand_data.stratify(folds)
 
+progress = 0
+
 predicted_data = None
 evaluation = Evaluation(rand_data)
 for i in range(folds):
+    print(progress)
+    progress = progress + 1
+
     train = rand_data.train_cv(folds, i)
     # the above code is used by the StratifiedRemoveFolds filter,
     # the following code is used by the Explorer/Experimenter

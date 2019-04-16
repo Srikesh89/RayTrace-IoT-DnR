@@ -1,6 +1,6 @@
 from scapy.all import * # Packet manipulation
 import pandas as pd # Pandas - Create and Manipulate DataFrames
-import numpy as np # Math Stuff (don't worry only used for one line :] )
+import numpy as np # Math Stuff 
 import binascii # Binary to Ascii 
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -20,12 +20,9 @@ udp_fields = [field.name for field in UDP().fields_desc] #similar to above but w
 dataframe_fields = ip_fields + ['time'] + tcp_fields + ['payload','payload_raw','payload_hex'] #defining the columns that will be in our pandas dataframe
 df = pd.DataFrame(columns=dataframe_fields) #creating a data frame that has the columns we defined in dataframe_fields
 
-##########################################################
 arp_fields = [field.name for field in ARP().fields_desc]
-
 dataframe_fields_ARP = arp_fields 
 df_ARP = pd.DataFrame(columns=dataframe_fields_ARP) 
-##########################################################
 
 progress = 0
 
@@ -34,8 +31,6 @@ with open("Known_Devices.txt", "r") as f:
     for line in f:
         temp = line.split();   
         known_devices[temp[0]] = temp[1]
-
-#print(known_devices) 
 
 ############################################################################################
 # Function for extracting fields from given packet and saving them to our pandas dataframe #
@@ -146,7 +141,8 @@ pcapFileName = sys.argv[1]
 # scapy function that allows us to perform a function on each packet in our pcap
 # prn is the function to pass each packet to
 # timeout is the amount of time to process packets (using this because the pcap is so large) 
-sniff(offline=pcapFileName,prn=method_filter_HTTP,store=0, timeout=3)
+sniff(offline=pcapFileName,prn=method_filter_HTTP,store=0, timeout=600)
+
 # Reset Index
 df = df.reset_index()
 
